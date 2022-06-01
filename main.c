@@ -28,18 +28,24 @@ int main()
         if (r < 0)
             printf("ERROR: failed to get device descriptor code=%d\n", r);
 
+        printf("VID=0x%X,\t PID=0x%X\n", desc.idVendor, desc.idProduct);
         if (desc.idVendor == VID){
 
             if (desc.idProduct == PID){
                 libusb_device_handle *handle;
                 r = libusb_open(dev, &handle);
-                if (r < 0)
+                if (r < 0){
                     printf("ERROR: failed to open device code=%d\n", r);
+                    exit(r);
+                    //LIBUSB_ERROR_NO_MEM
+                }
 
-                char buf[100];
+                unsigned char buf[100];
                 r = libusb_get_string_descriptor_ascii(handle, desc.iSerialNumber, buf, sizeof (buf));
-                if (r < 0)
+                if (r < 0){
                     printf("ERROR: failed to get serial number code=%d\n", r);
+                    exit(r);
+                }
 
                 printf("\n\n%s\n\n", buf);
             }
